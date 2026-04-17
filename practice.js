@@ -36,6 +36,10 @@ const TeamB = ["player_a", "player_b", "player_c", "player_d", "player_e"];
 console.log(TeamA);
 console.log(TeamB); // day 2 task 1
 
+for ( let i = 0 ; i < TeamA.length ; i++){
+    console.log(TeamA[i]);
+}  //day 2 task 2
+
 
 
 
