@@ -33,12 +33,21 @@
 const TeamA = ["player1", "player2", "player3", "player4", "player5" ];
 const TeamB = ["player_a", "player_b", "player_c", "player_d", "player_e"];
 
-console.log(TeamA);
-console.log(TeamB); // day 2 task 1
+// console.log(TeamA);
+// console.log(TeamB); // day 2 task 1
 
-for ( let i = 0 ; i < TeamA.length ; i++){
-    console.log(TeamA[i]);
-}  //day 2 task 2
+// for ( let i = 0 ; i < TeamA.length ; i++){
+//     console.log(TeamA[i]);
+// }  //day 2 task 2
+
+function randomPlayer(team){
+    return team[Math.floor(Math.random() * team.length)];   
+}
+
+console.log(randomPlayer(TeamA)); 
+
+
+
 
 
 
