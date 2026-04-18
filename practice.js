@@ -1,66 +1,71 @@
-// function comments() {
-//     // console.log(TeamA);
-//     // console.log(TeamB); // day 2 task 1
+const TeamA = [{name:"Aru" ,  batting : 85 , aggression:75, consistency:65 , isCaptain:true },
+         {name:"raghav" , batting : 92 , aggression:85, consistency:90 , isCaptain:false },
+         {name:"divyam" , batting : 83 , aggression:88, consistency:60 , isCaptain:false },
+         {name:"arbaz" , batting : 75 , aggression:75, consistency:75 , isCaptain:false },
+         {name:"Addy" , batting : 55 , aggression:95, consistency:50 , isCaptain:false }];
 
-//     // for ( let i = 0 ; i < TeamA.length ; i++){
-//     //     console.log(TeamA[i]);
-//     // }  //day 2 task 2
-
-// }
-
-
-
-// const TeamA = ["player1", "player2", "player3", "player4", "player5"];
-// const TeamB = ["player_a", "player_b", "player_c", "player_d", "player_e"];
+         const TeamB = [{name:"mark" ,  batting : 80 , aggression:80, consistency:80 , isCaptain:false },
+         {name:"john" , batting : 85 , aggression:85, consistency:85 , isCaptain:false },
+         {name:"sid" , batting : 90 , aggression:90, consistency:90 , isCaptain:false },
+         {name:"rick" , batting : 95 , aggression:95, consistency:95 , isCaptain:false },
+         {name:"root" , batting : 100 , aggression:100, consistency:100 , isCaptain:true }];
 
 
-// function toss() {
-//     const Prob = Math.random()
-//     if (Prob > 0.5) {
-//         return "TeamA";
-//     }
-//     else {
-//         return "TeamB"
-//     };
-// }          // task one 
+function toss() {
+    const Prob = Math.random()
+    if (Prob > 0.5) {
+        return "TeamA";
+    }
+    else {
+        return "TeamB"
+    };
+}          // task one 
+
+function randomPlayer(team) {
+    return team[Math.floor(Math.random() * team.length)];
+}
+
+function getCap(team){
+
+    for(let i=0;i<team.length;i++){
+    if (team[i].isCaptain){
+        return team[i];
+    }
+}
+}   
 
 
+function chooseTeam(tossResult) {
+    if (tossResult === "TeamA") {
+        return TeamA;
+    }else {
+        return TeamB;
+    }
+}
 
-// function randomPlayer(team) {
-//     return team[Math.floor(Math.random() * team.length)];
-// }
+function decision() {
+    const desc = Math.random() * 10;
+    if (desc > 5) {
+        return "Bat"
+    } else {
+         return "Bowl"
+    };
+};     // task two
 
-// function chooseTeam(tossResult) {
-//     if (tossResult === "TeamA") {
-//         return TeamA;
-//     }else {
-//         return TeamB;
-//     }
-// }
+function tossAndDecision() {
+    const tossResult = toss();
+    const team = chooseTeam(tossResult);
+    const randomPlayerResult = randomPlayer(team);
+    const Cap = getCap(team);
+     
+    return tossResult + " has won the toss!" + "\n" + "Captain : " + Cap.name + " " + "has chosen to " + decision() + " first!";
+};  // task 3
 
-// function decision() {
-//     const desc = Math.random() * 10;
-//     if (desc > 5) {
-//         return "Bat"
-//     } else {
-//          return "Bowl"
-//     };
-// };     // task two
-
-// function tossAndDecision() {
-//     const tossResult = toss();
-//     const randomPlayerResult = randomPlayer(chooseTeam(tossResult));
-
-//     return tossResult + " has won the toss!" + "\n" + "Random player : " + randomPlayerResult + " " + "has chosen to " + decision() + " first!";
-// };  // task 3
-
-// console.log(tossAndDecision()); //final result    
+console.log(tossAndDecision()); //final result      
 
 
-
-const Players = [{name:"Aru" ,  batting : 85 , aggression:75, consistency:65 }
-];
-
-console.log(Players[0].name);
-console.log(Players[0].batting);// task 1 day 3
+// for(let i=0;i<TeamA.length;i++){
+//     console.log(TeamA[i].name);
+//     console.log(TeamA[i].batting);
+// };
 
