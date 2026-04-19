@@ -104,3 +104,25 @@ function playBall(player) {
     }
 }
 
+function simulateOver(player) {
+    let ball = [];
+    let runs = 0;
+    let wickets = 0;
+    
+    for(let i=0; i<6; i++){
+        ball.push(playBall(player));
+        console.log("ball" + (i+1) + "=" + ball[i])
+        
+        if(ball[i] == "out"){
+            wickets += 1
+        }
+        else if(ball[i] !== "out"){
+            runs += ball[i]
+        }
+    }
+
+    return "Total runs: " + runs + "\n" + "Total wickets: " + wickets + "\n" + "array of ball outcomes: " + ball;
+
+}
+     
+console.log(simulateOver(TeamA[0]))    
