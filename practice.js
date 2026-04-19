@@ -64,8 +64,28 @@ function tossAndDecision() {
 console.log(tossAndDecision()); //final result      
 
 
-// for(let i=0;i<TeamA.length;i++){
-//     console.log(TeamA[i].name);
-//     console.log(TeamA[i].batting);
-// };
+function playBall() {
+    const ballOutcome = Math.random() * 100;
+    
+    if(ballOutcome <= 16.7 ){
+        return 0;
+    }
+    else if (ballOutcome <= 33.4){
+        return 1
+    }
+    else if(ballOutcome <= 50.1){
+        return 2
+    }
+    else if(ballOutcome <= 66.8){
+        return "OUT"
+    }
+    else if(ballOutcome <= 83.5){
+        return 4
+    }
+    else {
+        return 6
+    }
+}
+
+
 
