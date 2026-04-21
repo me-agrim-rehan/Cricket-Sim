@@ -50,3 +50,4 @@ export function tossAndDecision() {
 
     return tossResult + " has won the toss!" + "\n" + "Captain : " + Cap.name + " " + "has chosen to " + decision() + " first!";
 };  
+ 
