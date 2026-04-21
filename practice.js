@@ -102,6 +102,8 @@ function playBall(player) {
     else{
         return 6
     }
+
+
 }
 
 function simulateOver(player) {
@@ -110,19 +112,48 @@ function simulateOver(player) {
     let wickets = 0;
     
     for(let i=0; i<6; i++){
-        ball.push(playBall(player));
-        console.log("ball" + (i+1) + "=" + ball[i])
+        let result = playBall(player);
+        ball.push(result);
+        console.log("ball" + (i+1) + "=" + result);
         
-        if(ball[i] == "out"){
+        if(result === "out"){
             wickets += 1
-        }
-        else if(ball[i] !== "out"){
-            runs += ball[i]
-        }
-    }
+            if(wickets === 10){
+                break;
+            }    
 
-    return "Total runs: " + runs + "\n" + "Total wickets: " + wickets + "\n" + "array of ball outcomes: " + ball;
+        }
+        else{
+            runs += result;
+        }
+    }     
+
+
+    return { runs: runs, wickets: wickets }  ;
 
 }
-     
-console.log(simulateOver(TeamA[0]))    
+
+
+function simulateInnings(team) {
+    let totalRuns = 0;  
+    let totalWickets = 0;
+    let overs =[];
+    let BatterOnStrike = randomPlayer(team);
+
+    for(let i=0;i<2;i++){
+        let overResult = simulateOver(randomPlayer(team)) 
+        let summary = "Over " + (i+1) + ": " + overResult.runs + " runs and " + overResult.wickets + " wickets";
+        overs.push(summary);
+        console.log(summary);
+        totalRuns += overResult.runs
+        totalWickets += overResult.wickets
+        console.log("Score: " + totalRuns + "/" + totalWickets + " Batter on strike: " + BatterOnStrike.name);
+        if(totalWickets === 10){
+            break;
+        }
+
+    }
+    return totalRuns + " runs and " + totalWickets + " wickets "+ "\n" + "Batter on strike: " + BatterOnStrike.name;
+}
+
+console.log(simulateInnings(TeamA))              
