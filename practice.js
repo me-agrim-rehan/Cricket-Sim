@@ -61,9 +61,6 @@ function tossAndDecision() {
     return tossResult + " has won the toss!" + "\n" + "Captain : " + Cap.name + " " + "has chosen to " + decision() + " first!";
 };  // task 3
 
-// console.log(tossAndDecision()); //final result      
-
-
 function playBall(player) {
     let ballOutcome = Math.random() * 100; 
     let outChance = 15 - (player.consistency / 5);
@@ -138,22 +135,28 @@ function simulateInnings(team) {
     let totalRuns = 0;  
     let totalWickets = 0;
     let overs =[];
-    let BatterOnStrike = randomPlayer(team);
+    let currentBatterIndex = 0;
+    let player = team[currentBatterIndex];
 
-    for(let i=0;i<2;i++){
-        let overResult = simulateOver(randomPlayer(team)) 
+    for(let i=0;i<50;i++){
+        let overResult = simulateOver(player);
+        currentBatterIndex += overResult.wickets;
+        if (currentBatterIndex >= team.length) {
+            break;
+        }
+        player = team[currentBatterIndex];
         let summary = "Over " + (i+1) + ": " + overResult.runs + " runs and " + overResult.wickets + " wickets";
         overs.push(summary);
         console.log(summary);
         totalRuns += overResult.runs
         totalWickets += overResult.wickets
-        console.log("Score: " + totalRuns + "/" + totalWickets + " Batter on strike: " + BatterOnStrike.name);
-        if(totalWickets === 10){
+        console.log("Score: " + totalRuns + "/" + totalWickets + " Batter on strike: " + (player ? player.name : "all out"));
+        if(totalWickets >= team.length - 1){
             break;
         }
 
     }
-    return totalRuns + " runs and " + totalWickets + " wickets "+ "\n" + "Batter on strike: " + BatterOnStrike.name;
+    return totalRuns + " runs and " + totalWickets + " wickets "+ "\n" + "Batter on strike: " + (player ? player.name : "all out") + "\n" + "Innings Over!";
 }
 
-console.log(simulateInnings(TeamA))              
+console.log(simulateInnings(TeamA))                
