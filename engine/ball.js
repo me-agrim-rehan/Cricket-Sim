@@ -1,4 +1,4 @@
-export function playBall(player) {
+export function playBall(player, bowler) {
     let ballOutcome = Math.random() * 100;
     let outChance = 15 - (player.consistency / 5);
     let fourchance = 20 + (player.aggression / 5);
