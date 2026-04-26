@@ -1,9 +1,10 @@
-export const TeamA = 
-[{ name: "Aru", batting: 85, aggression: 75, consistency: 65, isCaptain: true },
-{ name: "raghav", batting: 92, aggression: 85, consistency: 90, isCaptain: false },
-{ name: "divyam", batting: 83, aggression: 88, consistency: 60, isCaptain: false },
-{ name: "arbaz", batting: 75, aggression: 75, consistency: 75, isCaptain: false },
-{ name: "Addy", batting: 55, aggression: 95, consistency: 50, isCaptain: false }];
+export const TeamA = [
+  { name: "Aru", batting: 85, aggression: 75, consistency: 65, runs: 0, balls: 0, isOut: false ,isCaptain: false},
+  { name: "raghav", batting: 92, aggression: 85, consistency: 90, runs: 0, balls: 0, isOut: false ,isCaptain: false},
+  { name: "divyam", batting: 83, aggression: 88, consistency: 60, runs: 0, balls: 0, isOut: false ,isCaptain: false},
+  { name: "arbaz", batting: 75, aggression: 75, consistency: 75, runs: 0, balls: 0, isOut: false ,isCaptain: false},
+  { name: "Addy", batting: 55, aggression: 95, consistency: 50, runs: 0, balls: 0, isOut: false,isCaptain: false }
+];
 
 export const TeamB = 
 [{ name: "mark", batting: 80, aggression: 80, consistency: 80, isCaptain: false },

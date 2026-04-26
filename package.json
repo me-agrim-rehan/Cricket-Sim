@@ -1,6 +1,6 @@
 {
-  "dependencies": {
+  "type": "module",
+  "devDependencies": {
     "nodemon": "^3.1.14"
-  },
-  "type": "module"
+  }
 }
