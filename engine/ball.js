@@ -1,16 +1,16 @@
-export function playBall(player, bowler) {
+export function playBall(batsman, bowler) {
     let ballOutcome = Math.random() * 100;
-    let outChance = 15 - (player.consistency / 5);
-    let fourchance = 20 + (player.aggression / 5);
-    let sixchance = 10 + (player.aggression / 5);
+    let outChance = 15 - (batsman.consistency / 10) + (bowler.bowling / 10) ;
+    let fourchance = 20 + (batsman.aggression / 5) - (bowler.economy / 7);
+    let sixchance = 10 + (batsman.aggression / 5) - (bowler.economy / 7);
     let oneChance = 25;
     let twoChance = 10;
     let dotChance = 20;
 
     if (outChance < 5) {
         outChance = 5
-    };
-
+    }; 
+ 
     let l1 = outChance;
     let l2 = l1 + dotChance;
     let l3 = l2 + oneChance;

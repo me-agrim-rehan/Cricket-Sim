@@ -23,8 +23,8 @@ export function simulateInnings(battingTeam, bowlingTeam) {
                 totalWickets++;
                 striker.isOut = true;
 
-                if (currentIndex < team.length) {
-                    striker = team[currentIndex];
+                if (currentIndex < battingTeam.length) {
+                    striker = battingTeam[currentIndex];
                     currentIndex++;
                 } else {
                     break;
