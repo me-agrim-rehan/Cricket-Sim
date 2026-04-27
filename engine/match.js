@@ -8,16 +8,25 @@ export function simulateInnings(battingTeam, bowlingTeam) {
     let currentIndex = 2;
     let striker = battingTeam[0];
     let nonStriker = battingTeam[1];
-    let bowler = bowlingTeam[bowlingTeam.length - 1];
+    let bowlingindex = 0;
 
-    for (let i = 0; i < 2; i++) {
+    battingTeam.forEach(p => {
+    p.runs = 0;
+    p.balls = 0;
+    p.isOut = false;
+});
+
+    for (let i = 0; i < 5; i++) {
         balls = [];
+        let bowler = bowlingTeam[bowlingindex % bowlingTeam.length];
 
         for (let j = 0; j < 6; j++) {
+            if (!striker) break;
             let result = playBall(striker, bowler);
 
             balls.push(result);
             striker.balls++;
+            if (striker) striker.balls++;
 
             if (result === "out") {
                 totalWickets++;
@@ -27,6 +36,10 @@ export function simulateInnings(battingTeam, bowlingTeam) {
                     striker = battingTeam[currentIndex];
                     currentIndex++;
                 } else {
+                    striker = null;
+                }
+
+                if (totalWickets >= battingTeam.length - 1) {
                     break;
                 }
             } else {
@@ -34,7 +47,7 @@ export function simulateInnings(battingTeam, bowlingTeam) {
 
                 striker.runs += result;
 
-                if (result === 1) {
+                if (result % 2 === 1) {
                     let temp = striker;
                     striker = nonStriker;
                     nonStriker = temp;
@@ -42,14 +55,25 @@ export function simulateInnings(battingTeam, bowlingTeam) {
             }
 
             console.log(
-                `Over ${i + 1}.${j + 1}: ${result} | Runs: ${totalRuns}/${totalWickets} | Batter: ${striker.name} | Bowler: ${bowler.name}`
+                `Over ${i + 1}.${j + 1}: ${result} | Runs: ${totalRuns}/${totalWickets} | Batter: ${striker ? striker.name : "All out"} | Bowler: ${bowler.name}`
             );
         }
-        let temp = striker;
-        striker = nonStriker;
-        nonStriker = temp;
+        if (totalWickets < battingTeam.length - 1) {
+    let temp = striker;
+    striker = nonStriker;
+    nonStriker = temp;
+}
+    if (totalWickets >= battingTeam.length - 1) {
+        break;
+        console.log(
+                `Over ${i + 1}.${j + 1}: ${result} | Runs: ${totalRuns}/${totalWickets} | Batter: ${striker ? striker.name : "All out"} | Bowler: ${bowler.name}`
+            );
+    };
+    bowlingindex++;
+    
 
-        console.log(`End of Over ${i + 1}: ${balls.join("  ")}`);
+
+        console.log(`End of Over ${i + 1}: ${balls.join("  ")} | Runs: ${totalRuns}/${totalWickets}\n`);
     }
 
     console.log(`\nFinal Score: ${totalRuns}/${totalWickets}`);
@@ -62,4 +86,4 @@ export function simulateInnings(battingTeam, bowlingTeam) {
     });
 
     return { totalRuns, totalWickets };
-}
+}      
