@@ -22,13 +22,22 @@ export function simulateInnings(battingTeam, bowlingTeam) {
     p.wickets = 0;
 });
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
         balls = [];
         let bowler = bowlingTeam[bowlingindex % bowlingTeam.length];
 
+        let phase;
+        if (i < 2) {
+            phase = "Powerplay";
+        } else if (i < 8) {
+            phase = "middle";
+        } else {
+            phase = "death";
+        }
+
         for (let j = 0; j < 6; j++) {
             if (!striker) break;
-            let result = playBall(striker, bowler);
+            let result = playBall(striker, bowler, phase);
             bowler.ballsBowled++;
             balls.push(result);
             striker.balls++;
@@ -106,4 +115,4 @@ export function simulateInnings(battingTeam, bowlingTeam) {
 
 
     return { totalRuns, totalWickets };
-}      
+}          

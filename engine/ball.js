@@ -1,26 +1,54 @@
-export function playBall(batsman, bowler) {
+export function playBall(batsman, bowler, phase) {
     let ballOutcome = Math.random() * 100;
-    let boundary = batsman.boundary || batsman.aggression;
+    let timing = batsman.timing || batsman.aggression;
     let power = batsman.power || batsman.aggression;
-    let outChance = 15 - (batsman.consistency / 10) + (bowler.bowling / 10) ;
+    let outChance = 15 - (batsman.consistency / 10) + (bowler.bowling / 10);
     let fourchance = 20 + (batsman.aggression / 5) - (bowler.economy / 7) + (batsman.timing / 10);
     let sixchance = 10 + (batsman.aggression / 6) - (bowler.economy / 7) + (batsman.power / 10);
     let oneChance = 25;
     let twoChance = 10;
     let dotChance = 20 + (bowler.economy / 5);
 
-    
+        if (phase === "powerplay") {
+        outChance += 3;
+        fourchance += 3;
+
+        if (bowler.role === "powerplay") {
+            outChance += 3;
+        }
+    }
+
+    else if (phase === "middle") {
+        outChance -= 3;
+        dotChance += 5;
+        oneChance += 5;
+
+        if (bowler.role === "middle") {
+            dotChance += 3;
+        }
+    }
+
+    else if (phase === "death") {
+        sixchance += 10;
+        fourchance += 5;
+        outChance += 7;
+        dotChance -= 5;
+
+        if (bowler.role === "death") {
+            outChance += 3;
+        }
+    }
 
     if (outChance < 5) {
         outChance = 5
-    }; 
+    };
     if (fourchance < 5) {
         fourchance = 5
     };
     if (sixchance < 3) {
         sixchance = 3
     };
- 
+
     let l1 = outChance;
     let l2 = l1 + dotChance;
     let l3 = l2 + oneChance;
@@ -48,4 +76,5 @@ export function playBall(batsman, bowler) {
     }
 
 
-} 
+}      
+   
