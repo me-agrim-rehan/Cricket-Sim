@@ -16,6 +16,12 @@ export function simulateInnings(battingTeam, bowlingTeam) {
     p.isOut = false;
 });
 
+    bowlingTeam.forEach(p => {
+    p.runsConceded = 0;
+    p.ballsBowled = 0;
+    p.wickets = 0;
+});
+
     for (let i = 0; i < 5; i++) {
         balls = [];
         let bowler = bowlingTeam[bowlingindex % bowlingTeam.length];
@@ -23,13 +29,14 @@ export function simulateInnings(battingTeam, bowlingTeam) {
         for (let j = 0; j < 6; j++) {
             if (!striker) break;
             let result = playBall(striker, bowler);
-
+            bowler.ballsBowled++;
             balls.push(result);
             striker.balls++;
             if (striker) striker.balls++;
 
             if (result === "out") {
                 totalWickets++;
+                bowler.wickets++;
                 striker.isOut = true;
 
                 if (currentIndex < battingTeam.length) {
@@ -44,7 +51,7 @@ export function simulateInnings(battingTeam, bowlingTeam) {
                 }
             } else {
                 totalRuns += result;
-
+                bowler.runsConceded += result;
                 striker.runs += result;
 
                 if (result % 2 === 1) {
@@ -76,6 +83,7 @@ export function simulateInnings(battingTeam, bowlingTeam) {
         console.log(`End of Over ${i + 1}: ${balls.join("  ")} | Runs: ${totalRuns}/${totalWickets}\n`);
     }
 
+
     console.log(`\nFinal Score: ${totalRuns}/${totalWickets}`);
 
     console.log("\n--- Scorecard ---");
@@ -84,6 +92,18 @@ export function simulateInnings(battingTeam, bowlingTeam) {
             `${player.name} - ${player.runs} (${player.balls}) ${player.isOut ? "out" : "not out"}`
         );
     });
+
+        
+    console.log("\n--- Bowling Stats ---");
+    bowlingTeam.forEach(bowler => {
+        let overs = (bowler.ballsBowled / 6).toFixed(1);
+        let economy = (bowler.runsConceded / (bowler.ballsBowled / 6 || 1)).toFixed(2);
+
+        console.log(
+            `${bowler.name} - ${overs} overs | ${bowler.runsConceded} runs | ${bowler.wickets} wickets | Econ: ${economy}`
+        );
+    });
+
 
     return { totalRuns, totalWickets };
 }      

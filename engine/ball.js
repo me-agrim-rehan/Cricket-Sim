@@ -1,15 +1,25 @@
 export function playBall(batsman, bowler) {
     let ballOutcome = Math.random() * 100;
+    let boundary = batsman.boundary || batsman.aggression;
+    let power = batsman.power || batsman.aggression;
     let outChance = 15 - (batsman.consistency / 10) + (bowler.bowling / 10) ;
-    let fourchance = 20 + (batsman.aggression / 5) - (bowler.economy / 7);
-    let sixchance = 10 + (batsman.aggression / 5) - (bowler.economy / 7);
+    let fourchance = 20 + (batsman.aggression / 5) - (bowler.economy / 7) + (batsman.timing / 10);
+    let sixchance = 10 + (batsman.aggression / 6) - (bowler.economy / 7) + (batsman.power / 10);
     let oneChance = 25;
     let twoChance = 10;
-    let dotChance = 20;
+    let dotChance = 20 + (bowler.economy / 5);
+
+    
 
     if (outChance < 5) {
         outChance = 5
     }; 
+    if (fourchance < 5) {
+        fourchance = 5
+    };
+    if (sixchance < 3) {
+        sixchance = 3
+    };
  
     let l1 = outChance;
     let l2 = l1 + dotChance;
@@ -38,4 +48,4 @@ export function playBall(batsman, bowler) {
     }
 
 
-}
+} 
