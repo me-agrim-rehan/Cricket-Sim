@@ -39,29 +39,76 @@ export function simulateInnings(battingTeam, bowlingTeam, target) {
             p.role === phase && p.ballsBowled < 24
         );
 
-        // fallback if no role match
         if (possibleBowlers.length === 0) {
             possibleBowlers = bowlingTeam.filter(p => p.ballsBowled < 24);
         }
 
-        // remove last bowler (ONLY if alternatives exist)
+        if (possibleBowlers.length === 0) {
+            possibleBowlers = bowlingTeam; // emergency fallback
+        }
+
+        // remove last bowler
         if (lastBowler && possibleBowlers.length > 1) {
             possibleBowlers = possibleBowlers.filter(p => p !== lastBowler);
         }
 
-        if (possibleBowlers.length === 0) {
-            possibleBowlers = bowlingTeam.filter(p => p !== lastBowler);
-        }
+        // 🎯 PRIORITY SYSTEM
+        possibleBowlers.sort((a, b) => {
+            let scoreA = 0;
+            let scoreB = 0;
 
-        // pick bowler
-        let bowler = possibleBowlers[Math.floor(Math.random() * possibleBowlers.length)];
+            // phase preference
+            if (a.role === phase) scoreA += 5;
+            if (b.role === phase) scoreB += 5;
+
+            // wickets reward
+            scoreA += a.wickets * 2;
+            scoreB += b.wickets * 2;
+
+            // economy reward (lower is better)
+            scoreA += (10 - a.economy);
+            scoreB += (10 - b.economy);
+
+            return scoreB - scoreA;
+        });
+
+        // pick best (not random anymore)
+        let topChoices = possibleBowlers.slice(0, 2);
+        let bowler = topChoices[Math.floor(Math.random() * topChoices.length)];
         lastBowler = bowler;
+
         for (let j = 0; j < 6; j++) {
             if (!striker) break;
-            let result = playBall(striker, bowler, phase);
+
+            let ballsLeft = (10 - i) * 6 - j;
+            let runsNeeded = target ? target - totalRuns : 0;
+
+            let reqRate = target ? runsNeeded / (ballsLeft / 6) : 0;
+            let currRate = totalRuns / ((i * 6 + j + 1) / 6);
+
+            let aggressionBoost = 1;
+            let riskBoost = 1;
+
+            if (target) {
+                if (reqRate > 10) {
+                    aggressionBoost = 1.5; // panic hitting
+                    riskBoost = 1.4;
+                }
+                else if (reqRate > 7) {
+                    aggressionBoost = 1.25;
+                    riskBoost = 1.2;
+                }
+                else if (reqRate < currRate) {
+                    aggressionBoost = 0.9; // chill mode
+                    riskBoost = 0.9;
+                }
+            }
+
+            let result = playBall(striker, bowler, phase, aggressionBoost, riskBoost);
             bowler.ballsBowled++;
             balls.push(result);
-            if (striker) striker.balls++;
+
+            striker.balls++;
 
             if (result === "out") {
                 totalWickets++;
@@ -85,7 +132,7 @@ export function simulateInnings(battingTeam, bowlingTeam, target) {
                 striker.runs += result;
 
                 if (result % 2 === 1) {
-                    let temp = striker;
+                     let temp = striker;
                     striker = nonStriker;
                     nonStriker = temp;
                 }
@@ -127,7 +174,7 @@ export function simulateInnings(battingTeam, bowlingTeam, target) {
 
     console.log("\n--- Bowling Stats ---");
     bowlingTeam.forEach(bowler => {
-        let overs = (bowler.ballsBowled / 6).toFixed(1);
+        let overs = Math.floor(bowler.ballsBowled / 6) + "." + (bowler.ballsBowled % 6);
         let economy = (bowler.runsConceded / (bowler.ballsBowled / 6 || 1)).toFixed(2);
 
         console.log(

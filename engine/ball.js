@@ -1,17 +1,24 @@
-export function playBall(batsman, bowler, phase) {
+export function playBall(striker, bowler, phase, aggressionBoost = 1, riskBoost = 1) {
     let ballOutcome = Math.random() * 100;
-    let timing = batsman.timing || batsman.aggression;
-    let power = batsman.power || batsman.aggression;
-    let outChance = 15 - (batsman.consistency / 10) + (bowler.bowling / 10);
-    let fourchance = 20 + (batsman.aggression / 5) - (bowler.economy / 7) + (batsman.timing / 10);
-    let sixchance = 10 + (batsman.aggression / 6) - (bowler.economy / 7) + (batsman.power / 10);
-    let oneChance = 25;
-    let twoChance = 10;
-    let dotChance = 20 + (bowler.economy / 5);
+    let timing = striker.timing || striker.aggression;
+    let power = striker.power || striker.aggression;
+    let outChance = 10 - (striker.consistency / 12) + (bowler.bowling / 12);
+    let fourchance = 25 + (striker.aggression / 5) - (bowler.economy / 7) + (striker.timing / 10);
+    let sixchance = 15 + (striker.aggression / 6) - (bowler.economy / 7) + (striker.power / 10);
+    let oneChance = 20;
+    let twoChance = 15;
+    let dotChance = 12 + (bowler.economy / 5);
+    let intentMultiplier = 1;
 
-        if (phase === "powerplay") {
-        outChance += 3;
-        fourchance += 3;
+    striker.momentum = striker.momentum || 0;
+    bowler.momentum = bowler.momentum || 0;
+
+    if (phase === "powerplay") {
+        outChance -= 5;   // safer
+        dotChance -= 5;   // fewer dots
+        oneChance += 5;   // more singles
+        fourchance += 5;  // some boundaries
+
 
         if (bowler.role === "powerplay") {
             outChance += 3;
@@ -21,18 +28,23 @@ export function playBall(batsman, bowler, phase) {
     else if (phase === "middle") {
         outChance -= 3;
         dotChance += 5;
-        oneChance += 5;
+        oneChance += 10;  // rotate strike more
+        fourchance -= 3;  // fewer risky shots
+
 
         if (bowler.role === "middle") {
             dotChance += 3;
         }
     }
+ 
 
     else if (phase === "death") {
-        sixchance += 10;
-        fourchance += 5;
-        outChance += 7;
-        dotChance -= 5;
+        outChance += 3;
+        dotChance += 5;
+        oneChance -= 4;  // rotate strike more
+        fourchance += 3;
+        sixchance += 8;  // fewer risky shots
+
 
         if (bowler.role === "death") {
             outChance += 3;
@@ -49,12 +61,41 @@ export function playBall(batsman, bowler, phase) {
         sixchance = 3
     };
 
+    if (striker.balls > 10) {
+        fourchance += 5;
+        outChance -= 2;
+        sixchance += 6;
+    }
+
+    if (phase === "powerplay") intentMultiplier = 1.1;
+    if (phase === "middle") intentMultiplier = 0.9;
+    if (phase === "death") intentMultiplier = 1.4;
+
+    fourchance *= intentMultiplier;
+    sixchance *= intentMultiplier;
+    outChance *= intentMultiplier;
+    fourchance *= aggressionBoost;
+    sixchance *= aggressionBoost;
+
+    outChance *= riskBoost;
+
+    // 🛑 MIN LIMITS
+    outChance = Math.max(outChance, 4);
+    fourchance = Math.max(fourchance, 4);
+    sixchance = Math.max(sixchance, 2);
+
+    fourchance += striker.momentum * 0.5;
+    sixchance += striker.momentum * 0.4;
+    outChance -= striker.momentum * 0.3;
+
+    outChance += bowler.momentum * 0.5;
+    dotChance += bowler.momentum * 0.3;
+
     let l1 = outChance;
     let l2 = l1 + dotChance;
     let l3 = l2 + oneChance;
     let l4 = l3 + twoChance;
     let l5 = l4 + fourchance;
-    let l6 = l5 + sixchance;
 
     if (ballOutcome <= l1) {
         return "out"
@@ -76,5 +117,6 @@ export function playBall(batsman, bowler, phase) {
     }
 
 
-}      
-   
+}
+
+
