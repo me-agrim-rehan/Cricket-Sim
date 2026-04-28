@@ -22,25 +22,45 @@ export function simulateInnings(battingTeam, bowlingTeam, target) {
         p.wickets = 0;
     });
 
+    let lastBowler = null;
+
     for (let i = 0; i < 10; i++) {
         balls = [];
-        let bowler = bowlingTeam[bowlingindex % bowlingTeam.length];
-
         let phase;
         if (i < 2) {
-            phase = "Powerplay";
+            phase = "powerplay";
         } else if (i < 8) {
             phase = "middle";
         } else {
             phase = "death";
         }
 
+        let possibleBowlers = bowlingTeam.filter(p =>
+            p.role === phase && p.ballsBowled < 24
+        );
+
+        // fallback if no role match
+        if (possibleBowlers.length === 0) {
+            possibleBowlers = bowlingTeam.filter(p => p.ballsBowled < 24);
+        }
+
+        // remove last bowler (ONLY if alternatives exist)
+        if (lastBowler && possibleBowlers.length > 1) {
+            possibleBowlers = possibleBowlers.filter(p => p !== lastBowler);
+        }
+
+        if (possibleBowlers.length === 0) {
+            possibleBowlers = bowlingTeam.filter(p => p !== lastBowler);
+        }
+
+        // pick bowler
+        let bowler = possibleBowlers[Math.floor(Math.random() * possibleBowlers.length)];
+        lastBowler = bowler;
         for (let j = 0; j < 6; j++) {
             if (!striker) break;
             let result = playBall(striker, bowler, phase);
             bowler.ballsBowled++;
             balls.push(result);
-            striker.balls++;
             if (striker) striker.balls++;
 
             if (result === "out") {
@@ -87,11 +107,7 @@ export function simulateInnings(battingTeam, bowlingTeam, target) {
         }
         if (totalWickets >= battingTeam.length - 1) {
             break;
-            console.log(
-                `Over ${i + 1}.${j + 1}: ${result} | Runs: ${totalRuns}/${totalWickets} | Batter: ${striker ? striker.name : "All out"} | Bowler: ${bowler.name}`
-            );
         };
-        bowlingindex++;
 
 
 
@@ -102,11 +118,11 @@ export function simulateInnings(battingTeam, bowlingTeam, target) {
     console.log(`\nFinal Score: ${totalRuns}/${totalWickets}`);
 
     console.log("\n--- Scorecard ---");
-    battingTeam.forEach(striker => {
+    battingTeam.forEach(player => {
         console.log(
-            `${striker.name} - ${striker.runs} (${striker.balls}) ${striker.isOut ? "out" : "not out"}`
+            `${player.name} - ${player.runs} (${player.balls}) ${player.isOut ? "out" : "not out"}`
         );
-    }); 
+    });
 
 
     console.log("\n--- Bowling Stats ---");
@@ -121,4 +137,4 @@ export function simulateInnings(battingTeam, bowlingTeam, target) {
 
 
     return { totalRuns, totalWickets };
-}          
+}           
